@@ -18,7 +18,8 @@ const server=http.createServer((req,res)=>{let body='';req.on('data',c=>body+=c)
   const errors=[];
   try {
     const env={...process.env,NICOLE_TEST_MODE:'1',NICOLE_TEST_DATA:userData};delete env.ELECTRON_RUN_AS_NODE;
-    app=await electron.launch({args:[ROOT],env,timeout:30000});
+    const executablePath=process.env.NICOLE_EXECUTABLE;
+    app=await electron.launch({...(executablePath?{executablePath}:{}),args:executablePath?[]:[ROOT],env,timeout:30000});
     const pet=await app.firstWindow();pet.on('pageerror',e=>errors.push(e.message));
     await pet.waitForFunction(()=>typeof window.nicole==='object' && document.querySelector('canvas').getContext('2d').getImageData(192,180,1,1).data[3]>0);
     let s=await pet.evaluate(()=>window.nicole.call('state'));assert.equal(s.pet.hunger,39);

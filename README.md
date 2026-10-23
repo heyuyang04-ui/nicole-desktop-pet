@@ -4,6 +4,8 @@
 
 ![妮可吃饭](assets/pet/eating.gif)
 
+![贴身饱腹度气泡](docs/images/status-bubble.png)
+
 ## 两种运行方式
 
 | | Codex 原生妮可 | 独立 Nicole Pet |
