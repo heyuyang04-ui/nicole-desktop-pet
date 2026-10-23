@@ -1,22 +1,26 @@
 ---
 name: nicole-pet
-description: Install Nicole (妮可), a pink-haired anime catgirl, as a Codex native pet or as a macOS/Windows desktop companion with mouse-following eyes, chat, feeding, and opt-in screen understanding. Use when the user asks to install, launch, customize, or repair this character.
+description: Install, customize, or repair Nicole (妮可), a pink-haired anime catgirl, as a Codex native pet with v2 mouse-gaze sprites. Use for this character's native pet assets and installation; this package does not provide a standalone desktop application.
 ---
 
-# Nicole pet
+# Nicole native pet
 
-This skill bundles the native Codex pet assets. The standalone application lives at https://github.com/heyuyang04-ui/nicole-desktop-pet.
+Repository: https://github.com/heyuyang04-ui/nicole-desktop-pet
 
-Choose the mode matching the request:
+Install the bundled character with `node <skill-directory>/scripts/install.cjs`. It needs only Node.js built-in modules: no API key, dependency installation, or image generation. The target is `$CODEX_HOME/pets/nicole`, defaulting to `~/.codex/pets/nicole` (the user's home directory on Windows too). The script backs up an existing Nicole package outside the pets directory and preserves unrelated files. Use it rather than editing Codex settings or the signed application.
 
-- **Codex pet / install character:** run `node <skill-directory>/scripts/install.cjs`. No API key, npm install, or network is required. It installs to `$CODEX_HOME/pets/nicole`, defaulting to `~/.codex/pets/nicole`, and backs up an existing Nicole package outside the pets directory. Select 妮可 in Codex pet settings after installation.
-- **Interactive desktop companion / chat / hunger / screen:** clone the repository into the user's chosen location. Read its README, install the locked dependencies with `npx pnpm@11.25.0 install --frozen-lockfile` (Node.js 24+), then run `npx pnpm@11.25.0 start`, or use the platform build in Releases when available. Interactions expand in a bubble attached to the pet, with no second application window. Do not imply the native asset package adds menus or chat to Codex itself.
-- **Older Codex:** the default package is sprite version 2, 1536×2288, including 16 gaze frames. `install.cjs --legacy` installs the bundled version 1, 1536×1872, without native eye tracking. Do not claim that changing atlas versions fixes every client-side switching issue. If switching makes a native pet invisible, report the actual client/version and test result; see the repository's `docs/native-pet-switch.md`.
+The default is sprite version 2, 1536×2288, including 16 gaze frames driven by compatible Codex clients. `--legacy` installs the bundled version 1, 1536×1872, without those gaze frames. `--dry-run` checks the target and asset. `--dest <absolute-pet-directory>` is available for an explicitly requested custom destination.
 
-The installer accepts `--dest <absolute-pet-directory>` for an explicitly requested custom destination and `--dry-run` for inspection. It never edits Codex settings or the signed application. Use the included installer rather than hand-editing user configuration.
+After installation, report the destination and version. Ask the user to fully quit and reopen Codex, select 妮可 in pet settings, and enable pet visibility. The skill is available on subsequent turns. Both platforms need a Codex client with native pet support; successful file installation does not prove rendering or click behavior.
 
-For model setup, let the user enter API base URL, model ID, and key in the application. Chat and vision are separately configured. Never commit a key, set up a shared author key, or promise that a text-only model can interpret screenshots. The image-generation key is not automatically a chat-model credential.
+If switching to Nicole makes the pet invisible, inspect the actual client and test results. The v2 format change is not a confirmed fix; see `docs/native-pet-switch.md` in the repository. Do not modify signed app files, private account state, or unrelated preferences.
 
-Screen capture is user-triggered, previews locally, and sends only after confirmation in the application. Do not turn on continuous capture. If the user wants DIY art, preserve the original sources; use their chosen image service and credentials only for the authorized generation. Reusable scripts and prompts are in `scripts/` and `assets/source/` in the repository.
+## Scope of customization
 
-After installing, report the destination, chosen mode and version, and any required client restart/selection. On other agents, this same instruction file can guide installation; standalone features come from running the app, not from the agent loading this skill.
+This repository only distributes the native pet. Do not install or recommend the retired standalone Electron application from old releases or Git history.
+
+The native package supplies names and sprites, not executable event handlers. No supported extension interface has been established here for custom right-click menus, double-click hunger cards, arbitrary adjacent bubbles, feeding events, or screenshot triggers. Explain this boundary instead of promising those behaviors from a skill or `pet.json` edit.
+
+Dialogue-based companionship, persistent hunger calculations, or user-requested image/screen analysis could be developed as separate Codex conversation workflows when requested. They are not implemented by this installer and must not be presented as native pet click interactions. Screen access depends on the available tools and user permissions; never claim to have seen a screen without actual image input.
+
+For requested DIY art, preserve existing sources and use the user's chosen image provider. Source assets and generation scripts live in the repository; they are not required to install the bundled character. Never include credentials in assets, instructions, or commits.
