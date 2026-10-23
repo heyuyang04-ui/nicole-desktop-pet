@@ -1,0 +1,24 @@
+{
+  "size": [
+    1536,
+    2288
+  ],
+  "spriteVersionNumber": 2,
+  "frameCounts": [
+    6,
+    8,
+    8,
+    4,
+    5,
+    8,
+    6,
+    6,
+    6,
+    8,
+    8
+  ],
+  "transparentUnusedCells": true,
+  "gazeFrames": 16,
+  "source": "original generated v1 rows; derived eye-pixel gaze frames",
+  "nativeSwitchRegression": "awaiting user verification"
+}

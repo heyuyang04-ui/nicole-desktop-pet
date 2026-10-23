@@ -1,0 +1,91 @@
+// Integration test against a real Electron window and a local fake model server.
+const { _electron: electron } = require('playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const http = require('node:http');
+const ROOT = path.resolve(__dirname, '..');
+const dataRoot = path.join(ROOT, '.runtime');
+fs.mkdirSync(dataRoot, {recursive:true});
+const userData = fs.mkdtempSync(path.join(dataRoot, 'smoke-'));
+fs.writeFileSync(path.join(userData,'settings.json'),JSON.stringify({pet:{hunger:42,updatedAt:Date.now()-15*60*1000},profiles:{}}));
+const requests=[];
+const server=http.createServer((req,res)=>{let body='';req.on('data',c=>body+=c);req.on('end',()=>{requests.push(JSON.parse(body));res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({choices:[{message:{content:'今天也陪着你，慢慢来就好。'}}]}));});});
+(async()=>{
+  await new Promise(r=>server.listen(0,'127.0.0.1',r));
+  const port=server.address().port;
+  let app;
+  const errors=[];
+  try {
+    const env={...process.env,NICOLE_TEST_MODE:'1',NICOLE_TEST_DATA:userData};delete env.ELECTRON_RUN_AS_NODE;
+    app=await electron.launch({args:[ROOT],env,timeout:30000});
+    const pet=await app.firstWindow();pet.on('pageerror',e=>errors.push(e.message));
+    await pet.waitForFunction(()=>typeof window.nicole==='object' && document.querySelector('canvas').getContext('2d').getImageData(192,180,1,1).data[3]>0);
+    let s=await pet.evaluate(()=>window.nicole.call('state'));assert.equal(s.pet.hunger,39);
+    assert.equal(await pet.evaluate(()=>typeof window.require),'undefined');
+    assert.equal(await pet.evaluate(()=>getComputedStyle(document.documentElement).backgroundColor),'rgba(0, 0, 0, 0)','transparent desktop must not inherit the panel theme');
+    await pet.locator('#pet').click();
+    await pet.waitForSelector('#card:not([hidden])');
+    const panel=pet;
+    assert.equal(await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().length),1,'all interactions must share the pet window');
+    await panel.waitForSelector('#message');
+    await panel.locator('[data-tab="settings"]').click();
+    for(const kind of ['chat','vision']){
+      await panel.locator(`#${kind}-base`).fill(`http://127.0.0.1:${port}/v1`);
+      await panel.locator(`#${kind}-model`).fill('test-model');
+    }
+    await panel.locator('#settings-form button[type="submit"]').click();
+    await panel.waitForFunction(()=>document.querySelector('#notice').textContent.includes('已保存'));
+    await panel.locator('[data-tab="chat"]').click();
+    await panel.locator('#message').fill('你好，妮可');
+    await panel.locator('#send').click();
+    await panel.waitForSelector('.message.assistant');
+    assert.equal(requests[0].messages.at(-1).content,'你好，妮可');
+    await panel.locator('#feed').click();
+    await panel.waitForFunction(()=>document.querySelector('#hunger').textContent.includes('69%'));
+    const dir=path.join(ROOT,'test-results');fs.mkdirSync(dir,{recursive:true});
+    await pet.screenshot({path:path.join(dir,'pet-eating.png'),omitBackground:true});
+    await panel.screenshot({path:path.join(dir,'chat.png')});
+    await panel.locator('[data-tab="screen"]').click();
+    await panel.locator('#capture').click();
+    await panel.waitForFunction(()=>!document.querySelector('#analyze').disabled);
+    assert.equal(requests.length,1,'preview must not send a model request');
+    await panel.locator('#analyze').click();
+    await panel.waitForFunction(()=>!document.querySelector('#chat').hidden && !document.querySelector('#send').disabled);
+    assert.equal(requests.length,2);
+    assert.equal(requests[1].messages.at(-1).content[1].type,'image_url');
+    const stale=await panel.evaluate(async()=>{try{await window.nicole.call('analyze-screen');return false;}catch{return true;}});assert.equal(stale,true);
+    await panel.locator('#clear').click();
+    await panel.waitForFunction(()=>document.querySelectorAll('.message').length===0);
+    await panel.locator('[data-tab="settings"]').click();
+    await panel.screenshot({path:path.join(dir,'settings.png')});
+    await panel.locator('#close-card').click();
+    await panel.waitForSelector('#card[hidden]',{state:'attached'});
+    await panel.locator('#pet').dblclick({delay:80});
+    await panel.waitForSelector('#status:not([hidden])');
+    await panel.waitForTimeout(500);
+    assert.equal(await panel.locator('#status').isVisible(),true,'double click must not fall back to chat');
+    await panel.screenshot({path:path.join(dir,'status-bubble.png'),omitBackground:true});
+    assert.equal(await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().length),1);
+    await app.evaluate(({Menu})=>{Menu.prototype.popup=function(){global.testMenuLabels=this.items.map(i=>i.label);};});
+    await panel.locator('#pet').click({button:'right'});
+    const labels=await app.evaluate(()=>global.testMenuLabels);
+    assert(labels.some(x=>x.includes('饱腹度 69%')));
+    assert(labels.some(x=>x.includes('喂食 +30%')));
+    await panel.evaluate(()=>window.nicole.call('panel','chat'));
+    await pet.evaluate(()=>window.nicole.call('feed')); //77? 69+30 = 99
+    s=await pet.evaluate(()=>window.nicole.call('state'));assert.equal(s.pet.hunger,99);
+    // Wait for feeding to finish; inspect left/right gaze via deterministic cursor events.
+    await pet.waitForTimeout(4800);
+    await panel.locator('#close-card').click();
+    await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows().find(w=>w.getTitle()==='妮可').webContents.send('cursor',{x:-300,y:160}));
+    await pet.waitForTimeout(100);
+    await pet.screenshot({path:path.join(dir,'pet-idle.png'),omitBackground:true});
+    assert.deepEqual(errors,[]);
+    await app.close();app=null;
+    const persisted=JSON.parse(fs.readFileSync(path.join(userData,'settings.json')));assert.equal(persisted.pet.hunger,99);
+    assert.equal(persisted.history,undefined);
+    fs.writeFileSync(path.join(dir,'smoke.json'),JSON.stringify({ok:true,platform:process.platform,tests:['initial/offline hunger','single click opens attached chat','double click opens attached hunger','one native window only','right-click interaction menu','sandboxed renderer','save settings','mock chat','feed +30','screen preview does not upload','explicit mock vision send','single-use screenshot','clear history','hunger persisted'],realScreenCaptured:false,liveModelCalled:false},null,2));
+    console.log('PASS: Electron integration; hunger, chat, feeding, screen preview/vision, persistence. No real screenshot or external model used.');
+  } finally {if(app)await app.close();server.close();}
+})().catch(e=>{console.error(e);process.exitCode=1;server.close();});

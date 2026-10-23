@@ -1,0 +1,30 @@
+{
+  "name": "nicole-desktop-pet",
+  "version": "0.1.0",
+  "description": "妮可 · 会看向你、陪你聊天的动漫桌宠",
+  "main": "app/main.cjs",
+  "author": "heyuyang04-ui",
+  "license": "MIT",
+  "packageManager": "pnpm@11.25.0",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.cjs",
+    "test:smoke": "node scripts/smoke.cjs",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "install:pet": "node skills/nicole-pet/scripts/install.cjs"
+  },
+  "devDependencies": { "electron": "45.0.0", "electron-builder": "26.15.3", "playwright": "1.56.1" },
+  "build": {
+    "appId": "io.github.heyuyang04-ui.nicole",
+    "productName": "Nicole Pet",
+    "icon": "assets/icon",
+    "directories": { "output": "dist" },
+    "files": ["app/**/*", "assets/pet/**/*", "package.json"],
+    "asar": true,
+    "mac": { "category": "public.app-category.entertainment", "target": ["zip"], "hardenedRuntime": false },
+    "win": { "target": ["nsis"] },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "perMachine": false }
+  }
+}

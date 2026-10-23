@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "run_dir": "妮可桌宠/run",
+  "spritesheet": "妮可桌宠/run/final/spritesheet.webp",
+  "validation": "妮可桌宠/run/final/validation.json",
+  "installed_validation": "妮可桌宠/run/final/installed-validation.json",
+  "contact_sheet": "妮可桌宠/run/qa/contact-sheet.png",
+  "review": "妮可桌宠/run/qa/review.json",
+  "package": "$CODEX_HOME/pets/nicole",
+  "sha256": "e482496ea54c9aaf8e1374478456fbda9d3b8c865d21af98536f47b4283a5148"
+}

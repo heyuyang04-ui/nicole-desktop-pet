@@ -1,0 +1,11 @@
+{
+  "result": "pass",
+  "frameCount": 6,
+  "durationPerFrameMs": 260,
+  "identity": "consistent",
+  "sizeAndBaseline": "stable",
+  "clipping": false,
+  "greenEdgeResidueAfterCleanup": false,
+  "transparentRgbResidue": false,
+  "method": "Independent visual review of contact sheet and decoded PNG/GIF frame sequence; no real-time playback claimed."
+}
