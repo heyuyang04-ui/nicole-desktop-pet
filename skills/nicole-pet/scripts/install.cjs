@@ -44,7 +44,11 @@ try{
     // Replace only managed files, preserving unrelated user files in the pet directory.
     for(const name of ['spritesheet.webp','pet.json'])fs.copyFileSync(path.join(staging,name),path.join(dest,name));
   }else fs.renameSync(staging,dest);
-  console.log(JSON.stringify({installed:dest,backup:backup||null,version:manifest.spriteVersionNumber,sha256},null,2));
+  let care;
+  let careError;
+  try { care=require('./care.cjs').interact('init',{codexRoot}); }
+  catch(error) { careError=error.message; }
+  console.log(JSON.stringify({installed:dest,backup:backup||null,version:manifest.spriteVersionNumber,sha256,skillVersion:fs.readFileSync(path.join(__dirname,'../VERSION'),'utf8').trim(),care,careError},null,2));
 }finally{
   if(fs.existsSync(staging)){for(const name of ['spritesheet.webp','pet.json']){const f=path.join(staging,name);if(fs.existsSync(f))fs.unlinkSync(f);}fs.rmdirSync(staging);}
 }
