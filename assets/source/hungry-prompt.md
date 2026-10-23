@@ -1,0 +1,5 @@
+Use case: identity-preserve.
+Asset type: Nicole's hungry expression for a small companion care panel.
+Image 1 is the canonical Nicole character reference. Keep her identity, pink long hair, fluffy cat ears with white interiors, blue eyes, blue ribbons with gold heart details, gold bell collar, white and blue maid outfit, lavender sleeves and pink crossbody strap. Match the chibi anime drawing style and proportions.
+Draw ONE centered waist-up portrait of the same character. Change only the pose and expression: both hands gently rest on her tummy, a small hopeful pout, slightly lowered ears, looking at the viewer as if politely asking for a snack. Cute and gentle, not distressed. Show both ears, all hair framing the face and both hands with generous margins.
+Flat pure #00FF00 green background for chroma key. Crisp clean silhouette. No green in the character, no shadows, floor, gradients, text, logos, UI, bubbles, tears, floating symbols, food or other characters. Square composition; all illustration content stays within the central 80 percent.

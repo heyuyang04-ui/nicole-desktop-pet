@@ -1,0 +1,30 @@
+{
+  "name": "nicole-care-panel",
+  "version": "0.4.0",
+  "description": "妮可的伴随照料面板 · 配合 Codex 原生宠物使用",
+  "main": "panel/main.cjs",
+  "author": "heyuyang04-ui",
+  "license": "MIT",
+  "packageManager": "pnpm@11.25.0",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.cjs",
+    "test:panel": "node scripts/smoke-panel.cjs",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "install:pet": "node skills/nicole-pet/scripts/install.cjs"
+  },
+  "devDependencies": { "electron": "45.0.0", "electron-builder": "26.15.3", "playwright": "1.56.1" },
+  "build": {
+    "appId": "io.github.heyuyang04-ui.nicole-care",
+    "productName": "Nicole Care",
+    "icon": "assets/panel/hungry.png",
+    "directories": { "output": "dist/panel" },
+    "files": ["panel/**/*", "assets/panel/**/*", "assets/pet/idle.png", "skills/nicole-pet/scripts/care.cjs", "skills/nicole-pet/VERSION", "skills/nicole-pet/assets/eating.gif", "package.json"],
+    "asar": true,
+    "mac": { "category": "public.app-category.entertainment", "target": ["zip"], "hardenedRuntime": false },
+    "win": { "target": ["zip"] },
+    "artifactName": "nicole-care-${version}-${os}-${arch}.${ext}"
+  }
+}

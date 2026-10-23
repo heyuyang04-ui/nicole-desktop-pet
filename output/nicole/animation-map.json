@@ -1,0 +1,21 @@
+{
+  "documentationOnly": true,
+  "note": "Codex chooses native animation playback. This file does not register event handlers.",
+  "columns": 8,
+  "rows": 11,
+  "cellSize": [192, 208],
+  "spriteVersionNumber": 2,
+  "animations": [
+    { "row": 0, "name": "idle", "frames": 6 },
+    { "row": 1, "name": "running-right", "frames": 8 },
+    { "row": 2, "name": "running-left", "frames": 8 },
+    { "row": 3, "name": "waving", "frames": 4 },
+    { "row": 4, "name": "jumping", "frames": 5 },
+    { "row": 5, "name": "failed", "frames": 8 },
+    { "row": 6, "name": "waiting", "frames": 6 },
+    { "row": 7, "name": "running", "frames": 6 },
+    { "row": 8, "name": "review", "frames": 6 },
+    { "row": 9, "name": "gaze-0-7", "frames": 8 },
+    { "row": 10, "name": "gaze-8-15", "frames": 8 }
+  ]
+}

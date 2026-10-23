@@ -4,6 +4,8 @@ v0.2.0 仅保留 Codex 原生包与安装技能，已移除独立程序及其测
 
 v0.3.0 新增 Codex 对话互动脚本，没有独立窗口、网络模型调用或后台进程。
 
+v0.4.0 按用户后续授权新增可选照料面板。17 项核心测试另覆盖安装幂等性、原子格式切换、只读诊断、面板与技能共享状态、通知去重/重新启用、损坏设置保留和多显示器位置回收。面板不包含第二个桌面宠物。
+
 `node --test test/native-install.test.cjs test/care.test.cjs` 在隔离临时目录验证：
 
 - 仓库原生包与技能内置 v2 资源一致。
@@ -18,8 +20,12 @@ v0.3.0 新增 Codex 对话互动脚本，没有独立窗口、网络模型调用
 
 CI 分别运行 macOS、Windows、Linux 的安装测试。文件安装通过不代表相应平台的 Codex 提供宠物功能，也不代表完成了原生界面回归。
 
-陪聊由当前 Codex 会话执行；看屏幕受当前工具与权限限制，未测试真实截图。喂食 GIF 只在聊天中展示，不表示新增了原生动画事件或菜单。
+陪聊由当前 Codex 会话执行；看屏幕受当前工具与权限限制，未测试真实截图。喂食 GIF 在聊天或可选照料面板中展示，不表示新增了原生动画事件或菜单。
 
-现有图像检查记录：`assets/codex/validation.json` 记录 11 行布局、各行帧数、16 个视线方向与透明空余单元。`assets/source/eating-visual-qa.json` 是保留素材的历史视觉复查，不表示原生宠物已支持喂食事件。
+现有图像检查记录：`output/nicole/validation.json` 记录 11 行布局、各行帧数、16 个视线方向与透明空余单元。`assets/source/eating-visual-qa.json` 是保留素材的历史视觉复查，不表示原生宠物已支持喂食事件。
+
+`node --test test/*.test.cjs` 运行全部核心测试。`node scripts/smoke-panel.cjs` 用临时 `CODEX_HOME` 启动实际 Electron 窗口：检查 30% 饥饿状态、喂食到 60%、动画、快速重复喂食保护、精简/展开尺寸、置顶、从技能同步到 90%、禁止任意 IPC 和渲染器 Node 隔离。截图位于忽略提交的 `test-results/panel/`，精选公开预览位于 `previews/`，全部使用测试数据。
+
+本机验证 macOS Apple Silicon。GitHub Actions 构建 Windows x64、Mac arm64/x64；构建成功不等同于每种系统的真实视觉验收。系统通知是否送达受操作系统权限影响，本机测试不向用户发送模拟饥饿通知。面板不会抓屏或读取 Codex 会话。
 
 尚未确认修复「内置切换到妮可消失」的问题，仍需用户重启 Codex 后按 `native-pet-switch.md` 的步骤实际验证。

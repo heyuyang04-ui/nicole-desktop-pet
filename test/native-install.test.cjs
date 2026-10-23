@@ -27,7 +27,7 @@ function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
 
 test('release v2 assets match the self-contained skill', () => {
   for (const name of ['pet.json', 'spritesheet.webp']) {
-    assert.deepEqual(fs.readFileSync(path.join(root, 'assets/codex', name)), fs.readFileSync(path.join(assets, name)));
+    assert.deepEqual(fs.readFileSync(path.join(root, 'output/nicole', name)), fs.readFileSync(path.join(assets, name)));
   }
 });
 
@@ -53,7 +53,7 @@ test('legacy fallback and v2 reinstall preserve user files and backup the previo
   assert.equal(legacy.version, 1);
   assert.equal(readJson(path.join(legacy.installed, 'pet.json')).spriteVersionNumber, 1);
   assert.equal(readJson(path.join(legacy.backup, 'pet.json')).spriteVersionNumber, 2);
-  assert.deepEqual(fs.readFileSync(path.join(legacy.installed, 'spritesheet.webp')), fs.readFileSync(path.join(assets, 'spritesheet-v1.webp')));
+  assert.deepEqual(fs.readFileSync(path.join(legacy.installed, readJson(path.join(legacy.installed, 'pet.json')).spritesheetPath)), fs.readFileSync(path.join(assets, 'spritesheet-v1.webp')));
   assert.equal(fs.readFileSync(path.join(legacy.backup, 'user-note.txt'), 'utf8'), 'keep me');
   assert.deepEqual(ok(run(dir, '--legacy', '--dry-run')).size, [1536, 1872]);
   const restored = ok(run(dir));
@@ -74,4 +74,52 @@ test('installation refuses to replace a different character', t => {
   assert.match(result.stderr, /different pet/);
   assert.equal(fs.readFileSync(path.join(dest, 'pet.json'), 'utf8'), original);
   assert.deepEqual(fs.readdirSync(dest), ['pet.json']);
+});
+
+test('reinstalling identical assets does not touch pet files or create another backup', t => {
+  const dir = fixture(t), initial = ok(run(dir));
+  const files = ['pet.json', 'spritesheet.webp'].map(name => path.join(initial.installed, name));
+  for (const file of files) fs.utimesSync(file, new Date('2020-01-01'), new Date('2020-01-01'));
+  const before = files.map(file => fs.statSync(file).mtimeMs);
+  const again = ok(run(dir));
+  assert.equal(again.unchanged, true);
+  assert.equal(again.backup, null);
+  assert.deepEqual(files.map(file => fs.statSync(file).mtimeMs), before);
+});
+
+test('a format upgrade keeps both old and new manifests readable at each rename', t => {
+  const dir = fixture(t);
+  const original = ok(run(dir, '--legacy'));
+  const originalBytes = fs.readFileSync(path.join(original.installed, 'spritesheet.webp'));
+  const result = spawnSync(process.execPath, ['-e', `
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const { readPackage } = require(path.join(path.dirname(process.argv[1]), 'native.cjs'));
+    const dest = path.join(process.env.CODEX_HOME, 'pets/nicole');
+    const rename = fs.renameSync;
+    fs.renameSync = (...args) => {
+      readPackage(dest);
+      const result = rename(...args);
+      readPackage(dest);
+      return result;
+    };
+    console.log(JSON.stringify(require(process.argv[1]).install([])));
+  `, installer], { env: { ...process.env, CODEX_HOME: dir }, cwd: dir, encoding: 'utf8' });
+  assert.equal(ok(result).version, 2);
+  assert.deepEqual(fs.readFileSync(path.join(original.installed, 'spritesheet.webp')), originalBytes);
+});
+
+test('busy install lock is preserved and doctor is read-only', t => {
+  const dir = fixture(t), initial = ok(run(dir));
+  const { inspect } = require('../skills/nicole-pet/scripts/doctor.cjs');
+  const file = path.join(initial.installed, 'spritesheet.webp');
+  const before = fs.statSync(file).mtimeMs;
+  assert.equal(inspect(dir).matchesBundledArt, true);
+  assert.equal(fs.statSync(file).mtimeMs, before);
+  const lock = path.join(dir, 'pet-backups/nicole/.install-lock');
+  fs.mkdirSync(lock);
+  assert.notEqual(run(dir).status, 0);
+  assert.ok(fs.existsSync(lock));
+  fs.writeFileSync(file, 'broken');
+  assert.equal(inspect(dir).validPackage, false);
 });

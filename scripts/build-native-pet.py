@@ -48,7 +48,7 @@ def main():
         contact.alpha_composite(frame,((i%8)*192,(i//8)*208))
     # Normalize fully transparent pixels after resampling.
     atlas=despill(atlas)
-    out=ROOT/'assets/codex';out.mkdir(parents=True,exist_ok=True)
+    out=ROOT/'output/nicole';out.mkdir(parents=True,exist_ok=True)
     manifest={'id':'nicole','displayName':'妮可','description':'粉发猫耳动漫桌宠，支持鼠标视线跟随。','spriteVersionNumber':2,'spritesheetPath':'spritesheet.webp'}
     atlas.save(out/'spritesheet.webp',lossless=True)
     (out/'pet.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

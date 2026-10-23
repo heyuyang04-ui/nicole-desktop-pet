@@ -8,6 +8,7 @@ Example: python3 scripts/generate-seedream.py --prompt assets/source/eating-prom
 import argparse
 import base64
 import json
+import getpass
 import os
 from pathlib import Path
 import urllib.error
@@ -20,8 +21,11 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--reference", type=Path, action="append", default=[])
     parser.add_argument("--model", default="doubao-seedream-5-0-flash-260915")
+    parser.add_argument("--ask-key", action="store_true", help="Read a key without echoing or saving it")
     args = parser.parse_args()
     key = os.environ.get("ARK_API_KEY")
+    if not key and args.ask_key:
+        key = getpass.getpass("ARK_API_KEY (not saved): ")
     if not key:
         raise SystemExit("ARK_API_KEY is required in the environment.")
     if args.output.exists():

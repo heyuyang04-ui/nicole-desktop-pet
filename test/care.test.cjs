@@ -89,7 +89,7 @@ test('bundled skill runs from any working directory without dependencies or a re
   const installed = execute(path.join(skill, 'scripts/install.cjs'));
   assert.equal(installed.status, 0, installed.stderr);
   const installation = JSON.parse(installed.stdout);
-  assert.equal(installation.skillVersion, '0.3.0');
+  assert.equal(installation.skillVersion, fs.readFileSync(path.join(skill, 'VERSION'), 'utf8').trim());
   assert.equal(installation.care.fullness, 100);
   assert.equal(installation.careError, undefined);
   const state = JSON.parse(fs.readFileSync(installation.care.stateFile, 'utf8'));

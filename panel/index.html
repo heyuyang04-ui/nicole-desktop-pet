@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>妮可照料面板</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <header id="handle">
+      <span class="spark">✦</span><span class="title">妮可的口粮站</span>
+      <span id="compact-value" hidden>—</span>
+      <button id="collapse" class="icon" aria-label="切换精简胶囊" title="切换精简胶囊">−</button>
+      <button id="close" class="icon" aria-label="退出面板" title="退出面板">×</button>
+    </header>
+    <section id="details">
+      <div class="hero">
+        <div class="portrait"><img id="portrait" src="../assets/pet/idle.png" alt="妮可"></div>
+        <div class="greeting"><span class="eyebrow">NICOLE · CARE</span><h1 id="greeting">今天也要好好吃饭</h1><p id="quote">正在看看我的小肚子…</p></div>
+      </div>
+      <div class="fullness"><span>饱腹度</span><strong id="fullness">—<small>%</small></strong><span id="mood">读取中</span></div>
+      <progress id="meter" max="100" value="0" aria-label="饱腹度"></progress>
+      <p class="countdown" id="countdown">每 5 分钟消耗 1% · 离线也会计算</p>
+      <div class="actions"><button id="feed" class="primary" disabled>开饭啦 <span>+30%</span></button><button id="chat" class="secondary" title="复制指令后粘贴到 Codex 对话">陪我聊聊 ↗</button></div>
+      <div id="message" role="status" aria-live="polite">拖动顶部，把小面板放到妮可旁边</div>
+      <footer><label><input id="pin" type="checkbox" checked>置顶</label><label><input id="notify" type="checkbox">饿了通知我</label><span>右键有更多选项</span></footer>
+    </section>
+  </main>
+  <script src="renderer.js"></script>
+</body>
+</html>
