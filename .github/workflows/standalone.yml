@@ -1,4 +1,4 @@
-name: Build companion panel
+name: Build standalone Nicole Pet
 on:
   push:
     branches: [main]
@@ -36,6 +36,6 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       - uses: actions/upload-artifact@v4
         with:
-          name: nicole-care-${{ matrix.platform }}-${{ matrix.arch }}
-          path: dist/panel/*.zip
+          name: nicole-pet-${{ matrix.platform }}-${{ matrix.arch }}
+          path: dist/pet/*.zip
           if-no-files-found: error

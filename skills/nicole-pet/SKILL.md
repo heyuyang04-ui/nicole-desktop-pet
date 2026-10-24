@@ -1,6 +1,6 @@
 ---
 name: nicole-pet
-description: Install, update, or customize the Codex native pet Nicole (妮可), check her fullness, feed her, chat as her, or inspect a user-requested image in Codex conversation. Also supports explicitly requested installation of the optional Nicole Care companion panel; does not add custom Codex native menus.
+description: Install, update, or customize the Codex native pet Nicole (妮可), check her fullness, feed her, chat as her, or inspect a user-requested image in Codex conversation. The repository also ships a separately requested Nicole Pet desktop app; this skill does not inject menus into Codex.
 ---
 
 # Nicole native pet and conversation interactions
@@ -21,9 +21,9 @@ After installation, report the destination and version. In Settings > Pets, use 
 
 If switching to Nicole makes the pet invisible, run `node <skill-directory>/scripts/doctor.cjs` for read-only file checks. Ask whether the entire overlay disappears and whether Show pet restores it (default macOS Option+Space, Windows Win+Alt+P). Valid assets do not prove window visibility. The v2 format change and atomic installer are not confirmed client switching fixes; see `docs/native-pet-switch.md` in the repository. Do not modify signed app files, private account state, or unrelated preferences.
 
-## Optional companion panel
+## Independent desktop app
 
-Only when the user requests the clickable care panel, read [references/panel.md](references/panel.md). Nicole Care is a separate optional process with hunger, feeding, a compact card and optional low-fullness notifications. It shares the state below but does not replace the native pet or attach to its click handlers. A request to install/update only the native character or this skill does not authorize installing the panel. Do not reinstall the retired v0.1 standalone pet program.
+Only when the user requests the independent desktop character, explain that `Nicole Pet` is a separate Electron app. It owns its transparent character window, gaze, animation, click/double-click/right-click behavior and same-window cards. It shares the fullness state below with the skill. Read the repository README and release assets for the OS package; do not confuse it with the older `Nicole Care` panel-only app. A request to install/update only this native skill does not authorize installing the desktop app.
 
 ## Conversation commands
 
@@ -38,7 +38,7 @@ The first successful installation or care command initializes fullness to 100. E
 
 ## Native UI boundary
 
-The default skill installs only the native pet and conversation helpers. The optional care panel is a separate download, not a native Codex extension. Do not install or recommend the retired standalone pet from old releases or Git history.
+The default skill installs only the native pet and conversation helpers. The independent Nicole Pet app is a separate download, not a Codex extension. Do not modify signed Codex files or promise that its native menus can be extended.
 
 The native package supplies names and sprites, not executable event handlers. No supported extension interface has been established here for custom right-click menus, double-click hunger cards, arbitrary adjacent bubbles, feeding events, or screenshot triggers. Explain this boundary instead of promising those behaviors from a skill or `pet.json` edit.
 

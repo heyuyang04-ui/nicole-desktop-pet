@@ -1,125 +1,98 @@
-# 妮可 Nicole · Codex 原生宠物
+# 妮可 Nicole · 独立动漫桌宠
 
-粉发、蓝眼睛、猫耳。**v0.4.0：原生角色包 + 对话技能 + 可选照料面板。**
+v0.5.0 起提供真正的独立桌宠程序：妮可角色本体、透明置顶窗口、视线跟随、动作、气泡、聊天、截图分析、饱腹度、喂食和右键菜单都在同一个 App 里完成。
 
-妮可由 Codex 原生宠物显示；只想换角色，安装两份资源就够。想点击喂食、查看实时饱腹度，可以另外启动「Nicole Care」伴随面板，拖到妮可旁边。面板是独立进程，不会修改 Codex，也不会再生成一只桌面宠物。
+Codex 原生宠物版本仍保留在技能和原生资源包中，但它与独立 App 是两种运行方式。想要白龙项目那种“角色带着面板一起出现”的体验，请下载 **Nicole Pet**，不要只下载原生技能或旧的 Nicole Care 面板。
 
-![妮可](previews/idle.gif)
+## 直接下载
 
-## 让 Codex 安装或更新
-
-复制给能够操作本机的 Codex：
-
-```text
-请从 https://github.com/heyuyang04-ui/nicole-desktop-pet
-安装或更新最新版 skills/nicole-pet，阅读 SKILL.md，运行原生宠物安装脚本。
-已有版本请备份并保留我的饱腹度和自定义文件。
-```
-
-如果也需要可点击的照料面板，在后面加：
-
-```text
-同时安装适合我系统的 Nicole Care 伴随面板并启动。
-妮可仍使用 Codex 原生宠物，面板放在角色旁边即可。
-```
-
-安装不需要 API Key，不需要重新生成图片。原生安装器只用 Node.js 18+ 内置模块。安装后，在 **Codex 设置 → 宠物 → Refresh / 刷新** 中选择「妮可」；未刷新出来时完全退出并重开 Codex。默认显示快捷键：macOS `Option + Space`，Windows `Win + Alt + P`，以自己的快捷键设置为准。[官方说明](https://learn.chatgpt.com/docs/pets)
-
-## 下载与手动安装
-
-[最新版本下载](https://github.com/heyuyang04-ui/nicole-desktop-pet/releases/latest)
+[下载最新 v0.5.0](https://github.com/heyuyang04-ui/nicole-desktop-pet/releases/latest)
 
 | 文件 | 用途 |
 | --- | --- |
-| `nicole-codex-v2.zip` | 纯角色包：仅 `nicole/pet.json` 与 `nicole/spritesheet.webp` |
-| `nicole-pet-skill.zip` | 原生安装/更新、诊断、饱腹度、喂食和陪聊技能 |
-| `nicole-care-0.4.0-mac-arm64.zip` | 可选面板，Apple Silicon Mac |
-| `nicole-care-0.4.0-mac-x64.zip` | 可选面板，Intel Mac |
-| `nicole-care-0.4.0-win-x64.zip` | 可选面板，Windows x64 |
+| `nicole-pet-0.5.0-mac-arm64.zip` | Apple Silicon Mac 独立妮可 |
+| `nicole-pet-0.5.0-mac-x64.zip` | Intel Mac 独立妮可 |
+| `nicole-pet-0.5.0-win-x64.zip` | Windows x64 独立妮可 |
+| `nicole-codex-v2.zip` | 只安装到 Codex 原生宠物的角色资源 |
+| `nicole-pet-skill.zip` | Codex 对话中的饱腹度、喂食和陪聊技能 |
 
-纯角色包解压到 macOS `~/.codex/pets/` 或 Windows `%USERPROFILE%\.codex\pets\`。自定义 `CODEX_HOME` 时使用其下的 `pets/`。面板解压后运行 `Nicole Care.app` 或 `Nicole Care.exe`；它不包含自动开机启动。Mac 包未做 Apple 公证，系统可能拦截；请按系统安全设置核验并允许，不需要关闭 Gatekeeper。详细说明见 [面板安装与使用](docs/companion-panel.md)。
+Mac：解压后把 `Nicole Pet.app` 放入“应用程序”，双击启动。Windows：完整解压 ZIP 后运行 `Nicole Pet.exe`。程序没有自动安装服务；未签名/未公证的个人构建可能被系统拦截，请核验来源后按系统提示允许，不要关闭系统保护。
 
-从源码安装原生角色：
+## 独立角色怎么互动
 
-```sh
-git clone https://github.com/heyuyang04-ui/nicole-desktop-pet.git
-cd nicole-desktop-pet
-node skills/nicole-pet/scripts/install.cjs
-```
+- 单击妮可：打开同一个透明窗口里的聊天气泡。
+- 双击妮可：打开饱腹度卡片。
+- 右键妮可：查看饱腹度、喂食、聊天、看屏幕、打招呼、跳跃、设置和退出。
+- 拖动妮可：移动角色；透明区域不会挡住桌面。
+- `×` 或 `Esc`：收起卡片，只留下角色。
+- 角色眼睛：跟随鼠标平滑移动。
 
-已有源码安装更新：
+窗口结构和白龙项目相似：程序创建一个透明、置顶、可拖动的桌面窗口，在同一窗口中切换角色画布、气泡和功能卡片；不是“原生 Codex 宠物旁边再放一个面板”。参考白龙的卡片/胶囊思路，但没有复制它的代码、素材或账户读取逻辑。[参考说明](docs/references.md)
 
-```sh
-git pull --ff-only
-node skills/nicole-pet/scripts/install.cjs
-```
+## 饱腹度和吃东西
 
-上述命令更新角色资源；安装过技能的用户还需让 Codex 更新 `~/.codex/skills/nicole-pet`，不能只更新源码副本。相同图集重复安装不改文件；资源变化先备份，再用完整文件替换，格式升级时保留旧图集。饱腹度不会重置。`--dry-run` 只检查；`--legacy` 仅供明确需要旧 v1 格式的客户端，不是消失问题的通用修复。
+独立 App 与 Codex 技能共用 `$CODEX_HOME/pet-state/nicole/state.json`：首次为 100%，每经过 5 分钟减少 1%，喂食增加 30%，最高 100%，关闭程序的时间也会计算。喂食播放仓库已有的六帧吃饭动画，不会每次调用生图 API。
 
-## 饱腹度与互动
+独立 App 的聊天和看屏幕需要你在“模型与设置”里配置自己的兼容 Chat Completions 服务。DeepSeek 可用于聊天；视觉模型单独配置。火山视觉接口地址可填 `https://ark.cn-beijing.volces.com/api/v3`，模型 ID 按你的控制台权限填写。Seedream 是生图模型，不能直接当聊天/视觉模型使用。Key 通过系统安全存储保存；不会把作者的 Key 放进程序。
 
-![饥饿面板预览](previews/panel-hungry.png)
+看屏幕必须由你主动打开、选择显示器、预览并点击发送；截图只在内存中短暂存在，不自动监视桌面。macOS 首次使用需要“屏幕录制”权限。
 
-首次安装或首次使用为 100%；每满 5 分钟减 1%，最低 0%；每次喂食 +30%，最高 100%。关闭程序的时间也计算在内。状态保存在 `$CODEX_HOME/pet-state/nicole/state.json`，技能与面板共用，重装角色或升级都保留。
+## 两种版本的区别
 
-| 入口 | 可以做什么 |
-| --- | --- |
-| Codex 对话：`$nicole-pet 妮可状态` | 查看百分比和进度条 |
-| Codex 对话：`$nicole-pet 喂妮可` | 喂食 +30%，显示吃饭动图 |
-| Codex 对话：`$nicole-pet 妮可陪我聊天` | 在当前对话陪聊；看图也在此处理 |
-| 照料面板：开饭啦 | 点击喂食、播放已有吃饭动图 |
-| 照料面板：右键 / 顶部减号 | 饱腹度、喂食、精简胶囊、置顶、退出 |
-| 照料面板：饿了通知我 | 勾选后，在饱腹度 ≤30% 时发送一次系统通知；喂到 >30% 后重新启用下一轮提醒 |
-
-面板运行时每 15 秒核对状态，低饱腹度自动显示饥饿表情和文字；退出面板后不会继续发送通知。其「陪我聊聊」按钮复制 Codex 指令，需粘贴进 Codex；没有额外模型 API 或独立聊天窗口。
-
-原生宠物旁的 Quick Chat 可通过悬停后的铅笔按钮打开，并使用 `$nicole-pet`。**目前没有已确认的公开接口让角色包自定义 Codex 原生右键菜单、双击事件或气泡内容。** 面板可以拖到旁边，但不会自动跟随 Codex 宠物位置，也不接管其点击。[官方交互说明](https://learn.chatgpt.com/docs/pets)
-
-## 原生动作图鉴
-
-以下 GIF 从当前发布的图集导出，播放速度仅供预览，实际触发与时序由 Codex 控制。
-
-| 待机 | 向右移动 | 向左移动 |
+| | 独立 Nicole Pet | Codex 原生妮可 |
 | --- | --- | --- |
-| ![](previews/idle.gif) | ![](previews/running-right.gif) | ![](previews/running-left.gif) |
-| 挥手 | 跳跃 | 失败 |
-| ![](previews/waving.gif) | ![](previews/jumping.gif) | ![](previews/failed.gif) |
-| 等待 | 运行 | 检查 |
-| ![](previews/waiting.gif) | ![](previews/running.gif) | ![](previews/review.gif) |
+| 角色位置 | 系统桌面透明窗口 | Codex 自带宠物层 |
+| 双击/右键/拖动 | 独立 App 自己处理 | 没有公开自定义扩展接口 |
+| 饥饿和喂食 | 同一窗口中可用 | 通过 Codex 对话技能 |
+| 聊天和看屏幕 | App 内配置模型后使用 | 当前 Codex 对话处理 |
+| 与 Codex 的关系 | 可共用饱腹度文件，不注入 Codex | 由 Codex 原生显示 |
 
-原生 v2 图集为 1536×2288、8 列 11 行，最后两行提供 16 个视线方向。`output/nicole/animation-map.json` 只记录布局，**不是可执行事件配置**。饥饿图与吃饭动画用于面板/对话，不会改写原生动作槽位。
+不要同时启动两只妮可。若你只想在 Codex 宠物间选择角色，安装 `nicole-pet-skill.zip` 或运行原生安装命令；若你想要角色和面板一起独立显示，安装 `nicole-pet-*.zip`。
 
-## 妮可消失时
+## 给 Codex / agent 的安装指令
 
-运行只读诊断：
+独立桌宠：
 
-```sh
-node skills/nicole-pet/scripts/doctor.cjs
+```text
+从 https://github.com/heyuyang04-ui/nicole-desktop-pet/releases/latest
+下载并安装适合当前系统的 Nicole Pet 独立桌宠。
+我要角色本体和同一窗口中的聊天、双击饱腹度、右键喂食、鼠标视线跟随。
+不要只安装 Codex 原生技能，也不要再启动旧的 Nicole Care 面板。
 ```
 
-已收到的复现是「角色和下方控件一起消失，Option + Space 能恢复」。资源检查通过，但尚未确认 Codex 窗口隐藏/切换异常的根因。v0.4.0 修正了安装器重复覆盖和部分写入风险，**不宣称修复了客户端的切换消失问题**。恢复方法及回归步骤见 [问题记录](docs/native-pet-switch.md)。
+Codex 原生宠物：
 
-## 结构、DIY 与验证
+```text
+从 https://github.com/heyuyang04-ui/nicole-desktop-pet
+安装最新版 skills/nicole-pet，并运行原生宠物安装脚本。
+我要 Codex 原生妮可，不要安装独立桌宠程序。
+```
 
-- `output/nicole/`：原生角色包、布局与几何验证记录。
-- `skills/nicole-pet/`：可单独下载安装的技能，无面板运行依赖。
-- `panel/`：可选伴随面板源码；原生宠物不依赖它运行。
-- `previews/`：动作与面板图鉴。
-- `妮可桌宠/`：原始角色参考、生成图、提示词和动作帧。
-- `assets/source/`、`assets/pet/`、`assets/panel/`：吃饭与饥饿素材、加工图和制作记录。
+## 从源码构建独立 App
 
-素材使用用户指定的火山 Seedream API。`scripts/generate-seedream.py` 从 `ARK_API_KEY` 或 `--ask-key` 的隐藏输入读取密钥，不写入仓库。日常安装、显示、喂食不调用生图 API。新面板饥饿素材提示词为 `assets/source/hungry-prompt.md`。[素材来源](assets/PROVENANCE.md)
+需要 Node.js 24+、pnpm 11：
 
 ```sh
-node --test test/*.test.cjs
-# 开发面板需要 Node.js 24+、pnpm 11
 pnpm install --frozen-lockfile
 pnpm start
-pnpm test:panel
+pnpm test
+pnpm test:smoke
+pnpm exec electron-builder --mac --arm64 --publish never
+pnpm exec electron-builder --win --x64 --publish never
 ```
 
-macOS、Windows、Linux 跑核心数据/安装测试；macOS、Windows 构建面板。原生 Codex 的实际切换仍需人工回归。[验证范围](docs/validation.md)
+`app/main.cjs` 创建独立透明窗口并处理菜单、拖动、截图和模型请求；`app/pet.js` 播放动作和视线跟随；`app/panel.js` 在同一窗口内切换聊天/状态/屏幕/设置卡片；`skills/nicole-pet/scripts/care.cjs` 提供共享饱腹度规则。
 
-结构参考 [remielle-codex-pet](https://github.com/HanaAyane/remielle-codex-pet)，面板交互参考 [白龙桌宠](https://github.com/Wunsch2048/codex-bailong-desktop-pet)。没有复制这两个项目的代码、角色或动画，详见 [参考说明](docs/references.md)。
+## DIY 素材
 
-v0.2.0 移除了旧独立桌宠；v0.4.0 的 Nicole Care 是用户明确选择后新增的可选照料面板，不会恢复旧程序的桌面角色或聊天服务。
+- `assets/pet/`：独立 App 的透明角色、动作图集和吃饭动画。
+- `output/nicole/`：Codex 原生 v2 角色包与动作映射。
+- `skills/nicole-pet/`：原生技能、饱腹度脚本和对话说明。
+- `妮可桌宠/`：原始参考图、提示词、动作和制作过程。
+- `scripts/generate-seedream.py`：使用你自己的 `ARK_API_KEY` 调用火山 Seedream；密钥不会写入仓库。
+
+角色和饥饿素材来源见 [assets/PROVENANCE.md](assets/PROVENANCE.md)。
+
+## 已知边界
+
+独立 App 与 Codex 原生宠物是两套窗口，不能把独立 App 的右键菜单注入 Codex。Codex 原生宠物从内置角色切换后消失的问题仍由 Codex 客户端负责，`Option + Space` 可以恢复原生浮层；独立 App 不受该切换问题影响。

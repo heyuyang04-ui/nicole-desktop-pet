@@ -1,4 +1,6 @@
-# Nicole Care 伴随照料面板
+# Nicole Care 伴随照料面板（旧版 v0.4）
+
+v0.5.0 起推荐使用同一窗口内包含角色与卡片的 `Nicole Pet` 独立桌宠。本文仅保留给已经安装 v0.4 `Nicole Care` 的用户；新用户请按仓库 README 下载 `nicole-pet-*.zip`。
 
 v0.4.0 起提供可选面板，配合 Codex 原生妮可使用。它是单独的 Electron 进程，没有第二个桌面角色、独立聊天服务或常驻安装服务。
 
