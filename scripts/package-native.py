@@ -14,7 +14,7 @@ with zipfile.ZipFile(output / 'nicole-pet-skill.zip', 'w', zipfile.ZIP_DEFLATED)
     for file in sorted((ROOT / 'skills/nicole-pet').rglob('*')):
         if file.is_file() and file.name != '.DS_Store':
             archive.write(file, file.relative_to(ROOT / 'skills'))
-packages = [*output.glob('*.zip'), *(ROOT / 'dist/panel').glob(f'nicole-care-{version}-*.zip')]
+packages = [*output.glob('*.zip'), *(ROOT / 'dist/pet').glob(f'nicole-pet-{version}-*.zip')]
 checksums = [f'{hashlib.sha256(file.read_bytes()).hexdigest()}  {file.name}' for file in sorted(packages)]
 (output / 'SHA256SUMS.txt').write_text('\n'.join(checksums) + '\n')
 print(output)
